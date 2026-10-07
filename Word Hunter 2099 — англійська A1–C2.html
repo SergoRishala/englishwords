@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WORD HUNTER 2099 — English A1–C2</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#05060f;--panel:#0b0e22;--cy:#00f0ff;--mg:#ff2bd6;--lime:#b6ff3b;--tx:#d9e6ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 20% 0%,#1a0f3d 0,transparent 55%),radial-gradient(ellipse at 90% 100%,#003a4a 0,transparent 50%),var(--bg);color:var(--tx);font-family:Rajdhani,system-ui,sans-serif;font-size:18px;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(0,240,255,.05) 1px,transparent 1px) 0 0/100% 4px;pointer-events:none}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+h1{font-family:Orbitron,sans-serif;font-weight:800;font-size:clamp(22px,5vw,38px);letter-spacing:3px;margin:8px 0 2px;text-align:center;background:linear-gradient(90deg,var(--cy),var(--mg));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 12px rgba(0,240,255,.5))}
+.sub{text-align:center;opacity:.7;margin-bottom:12px;letter-spacing:1px}
+.bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.chip{font-family:Orbitron,sans-serif;font-size:14px;padding:8px 14px;border:1px solid var(--cy);border-radius:10px;background:var(--panel);box-shadow:0 0 12px rgba(0,240,255,.25)}
+button,select{font:700 16px Rajdhani,sans-serif;letter-spacing:1px;color:var(--tx);background:var(--panel);border:1px solid var(--mg);padding:8px 14px;border-radius:10px;cursor:pointer;box-shadow:0 0 12px rgba(255,43,214,.3);transition:.2s}
+button:hover{background:rgba(255,43,214,.25);transform:translateY(-1px)}
+button.on{background:rgba(0,240,255,.25);border-color:var(--cy)}
+.set{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;background:var(--panel);border:1px solid var(--cy);border-radius:14px;padding:12px;margin-bottom:14px;box-shadow:0 0 20px rgba(0,240,255,.2)}
+.set label{display:flex;flex-direction:column;gap:4px;font-size:14px;letter-spacing:1px;opacity:.95}
+.set .ck{flex-direction:row;align-items:center;gap:6px}
+.set input[type=range]{accent-color:var(--mg);width:150px}
+.set b{color:var(--cy);font-family:Orbitron,sans-serif}
+.main{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+#gw{max-width:min(94vw,560px);max-height:78vh;overflow:auto;padding:10px;background:var(--panel);border:1px solid var(--cy);border-radius:16px;box-shadow:0 0 30px rgba(0,240,255,.3),inset 0 0 30px rgba(0,240,255,.08)}
+#grid{display:grid;gap:2px;width:max-content;touch-action:none;user-select:none;-webkit-user-select:none}
+#grid.scr{touch-action:auto}
+.cell{width:var(--cs);height:var(--cs);display:flex;align-items:center;justify-content:center;font-family:Orbitron,sans-serif;font-weight:500;font-size:calc(var(--cs)*.5);text-transform:uppercase;border-radius:6px;background:rgba(255,255,255,.03);cursor:pointer}
+.cell.sel{background:rgba(0,240,255,.35);box-shadow:0 0 12px var(--cy);color:#fff}
+.cell.found{background:hsla(var(--h),100%,55%,.28);box-shadow:inset 0 0 0 1px hsl(var(--h),100%,60%);color:#fff}
+.cell.hint{animation:pulse .8s infinite}
+@keyframes pulse{50%{background:rgba(182,255,59,.6);box-shadow:0 0 16px var(--lime)}}
+.list{width:min(94vw,340px);max-height:78vh;overflow:auto;background:var(--panel);border:1px solid var(--mg);border-radius:16px;padding:14px;box-shadow:0 0 24px rgba(255,43,214,.25)}
+.list h2{font-family:Orbitron,sans-serif;font-size:15px;margin:0 0 10px;color:var(--mg);letter-spacing:2px}
+.w{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;margin-bottom:5px;border-radius:8px;background:rgba(255,255,255,.04);font-size:19px;font-weight:700}
+.w small{font-weight:500;opacity:.55;font-size:14px;align-self:center}
+.w.done{background:hsla(var(--h),100%,55%,.18);color:hsl(var(--h),100%,72%);cursor:pointer}
+#win{position:fixed;inset:0;background:rgba(5,6,15,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;z-index:9;padding:20px}
+#win.on{display:flex}
+#win h2{font-family:Orbitron,sans-serif;font-size:clamp(26px,7vw,48px);margin:0;background:linear-gradient(90deg,var(--lime),var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>WORD HUNTER 2099</h1>
+  <div class="sub">Натисни на слово зі списку, щоб почути його · рівні A1–C2 · поле до 100×100</div>
+  <div class="set">
+    <label>РІВЕНЬ<select id="lvl"><option>A1</option><option selected>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></select></label>
+    <label>НАПРЯМОК<select id="mode"><option value="en">Шукаю англійські (дано укр.)</option><option value="ua">Шукаю українські (дано англ.)</option></select></label>
+    <label>РОЗМІР ПОЛЯ: <b id="sv">10×10</b><input type="range" id="size" min="6" max="100" value="10"></label>
+    <label>КІЛЬКІСТЬ СЛІВ: <b id="nv">8</b><input type="range" id="num" min="3" max="260" value="8"></label>
+    <label class="ck"><input type="checkbox" id="rev" checked> Задом наперед</label>
+    <label class="ck"><input type="checkbox" id="snd" checked> 🔊 Озвучка</label>
+  </div>
+  <div class="bar">
+    <div class="chip">⏱ <span id="time">00:00</span></div>
+    <div class="chip">✔ <span id="cnt">0/8</span></div>
+    <button id="hintBtn">💡 Підказка</button>
+    <button id="scrBtn">✋ Прокрутка</button>
+    <button id="newBtn">⟳ Нова гра</button>
+  </div>
+  <div class="main">
+    <div id="gw"><div id="grid"></div></div>
+    <div class="list"><h2>ЗНАЙДИ СЛОВА</h2><div id="words"></div></div>
+  </div>
+</div>
+<div id="win"><h2>МІСІЯ ВИКОНАНА!</h2><div id="winTxt" style="font-size:22px"></div><button id="again">▶ Грати ще</button></div>
+<script>
+const RAW={
+A1:"cat:кіт,dog:собака,book:книга,apple:яблуко,house:будинок,water:вода,mother:мати,father:батько,red:червоний,green:зелений,table:стіл,chair:стілець,milk:молоко,bread:хліб,school:школа,friend:друг,sun:сонце,tree:дерево,car:машина,fish:риба",
+A2:"window:вікно,garden:сад,breakfast:сніданок,holiday:свято,weather:погода,doctor:лікар,pencil:олівець,bridge:міст,cheese:сир,winter:зима,kitchen:кухня,travel:подорож,beach:пляж,music:музика,lesson:урок,jacket:куртка,hungry:голодний,island:острів,ticket:квиток,village:село",
+B1:"adventure:пригода,comfortable:зручний,environment:середовище,experience:досвід,opinion:думка,journey:мандрівка,neighbour:сусід,knowledge:знання,believe:вірити,decision:рішення,honest:чесний,increase:збільшувати,mistake:помилка,possible:можливий,recipe:рецепт,receive:отримувати,successful:успішний,tradition:традиція,various:різний,wonderful:чудовий",
+B2:"achievement:досягнення,appreciate:цінувати,behaviour:поведінка,challenge:виклик,conclude:завершувати,consequence:наслідок,demonstrate:демонструвати,efficient:ефективний,flexible:гнучкий,generate:створювати,hesitate:вагатися,influence:вплив,junction:перехрестя,manage:керувати,negotiate:домовлятися,obstacle:перешкода,reluctant:неохочий,sustainable:сталий,tolerate:терпіти,valuable:цінний",
+C1:"ambiguous:неоднозначний,arbitrary:довільний,coherent:послідовний,compelling:переконливий,deteriorate:погіршуватися,elaborate:докладний,inevitable:неминучий,meticulous:педантичний,notorious:сумнозвісний,pragmatic:прагматичний,resilient:витривалий,scrutiny:ретельність,substantial:суттєвий,tentative:попередній,ubiquitous:всюдисущий,volatile:мінливий,plausible:правдоподібний,alleviate:полегшувати,inherent:притаманний,profound:глибокий",
+C2:"ephemeral:швидкоплинний,ineffable:невимовний,obfuscate:затемнювати,perfunctory:поверховий,quintessence:квінтесенція,recalcitrant:норовливий,sycophant:підлабузник,taciturn:мовчазний,vicarious:опосередкований,winsome:чарівний,zealous:ревний,magnanimous:великодушний,munificent:щедрий,obstinate:впертий,pernicious:згубний,equivocal:двозначний,gregarious:товариський,laconic:лаконічний,nefarious:підлий,capricious:примхливий"};
+const EXTRA={
+A1:"sister:сестра,brother:брат,banana:банан,orange:апельсин,bird:птах,horse:кінь,door:двері,bed:ліжко,hand:рука,eye:око,black:чорний,white:білий,blue:синій,big:великий,small:маленький,happy:щасливий,morning:ранок,night:ніч,rain:дощ,snow:сніг,moon:місяць,star:зірка,city:місто,toy:іграшка,baby:дитина",
+A2:"rabbit:кролик,monkey:мавпа,pocket:кишеня,teacher:вчитель,bottle:пляшка,flower:квітка,cloud:хмара,river:річка,mountain:гора,picture:картина,market:ринок,street:вулиця,office:офіс,dinner:вечеря,laugh:сміятися,tired:втомлений,clever:розумний,money:гроші,family:родина,train:потяг,umbrella:парасолька,kitten:кошеня,shopping:покупки,jungle:джунглі",
+B1:"freedom:свобода,friendship:дружба,language:мова,forget:забувати,improve:покращувати,invite:запрошувати,luggage:багаж,passport:паспорт,museum:музей,festival:фестиваль,volunteer:волонтер,safety:безпека,disappear:зникати,discover:відкривати,enormous:величезний,embarrassed:збентежений,lonely:самотній,ancient:давній,attractive:привабливий,dangerous:небезпечний",
+B2:"ambitious:амбітний,awareness:обізнаність,benefit:користь,controversy:суперечка,creativity:креативність,disadvantage:недолік,enthusiasm:ентузіазм,explore:досліджувати,fascinating:захопливий,inspire:надихати,maintain:підтримувати,reliable:надійний,reputation:репутація,struggle:боротьба,tendency:тенденція,unexpected:несподіваний,witness:свідок,wisdom:мудрість,remarkable:визначний,thoughtful:уважний",
+C1:"aesthetic:естетичний,candid:відвертий,circumvent:обходити,conundrum:головоломка,diligent:старанний,eloquent:красномовний,exacerbate:посилювати,frugal:ощадливий,impeccable:бездоганний,juxtapose:зіставляти,lucid:ясний,nostalgia:ностальгія,paradox:парадокс,serene:безтурботний,tenacious:наполегливий,whimsical:химерний,zenith:зеніт,endeavour:прагнення,prevalent:поширений",
+C2:"abstruse:незбагненний,benevolent:доброзичливий,cacophony:какофонія,clandestine:таємний,ebullient:життєрадісний,enigmatic:загадковий,fastidious:прискіпливий,idiosyncrasy:особливість,labyrinth:лабіринт,melancholy:меланхолія,nebulous:туманний,ostentatious:показний,panacea:панацея,quixotic:ідеалістичний,reverie:мрія,sanguine:оптимістичний,tenuous:слабкий,ubiquity:всюдисущість,verbose:багатослівний,wistful:сумовитий"};
+const LV=Object.keys(RAW),BANK={};let TOTAL=0;
+LV.forEach(l=>{BANK[l]=(RAW[l]+","+EXTRA[l]).split(",").map(s=>{const [en,ua]=s.split(":");return{en,ua}});TOTAL+=BANK[l].length});
+const UA="абвгдеєжзийіїклмнопрстуфхцчшщьюя",EN="abcdefghijklmnopqrstuvwxyz";
+const DIRS=[[0,1],[1,0],[1,1],[-1,1]];
+const $=id=>document.getElementById(id);
+let N,g,words,found,cells,start=null,path=[],t0,tick,hintCell=null,scrollMode=false;
+
+function suggest(n){return Math.min(TOTAL,Math.max(4,Math.round(n*n/12)))}
+function pool(l,n){
+  const i=LV.indexOf(l),ord=LV.map((x,k)=>[Math.abs(k-i),x]).sort((a,b)=>a[0]-b[0]);
+  const out=[];
+  ord.forEach(([,x])=>{out.push(...BANK[x].filter(w=>w.en.length<=n).sort(()=>Math.random()-.5))});
+  return out;
+}
+function gen(n,count,mode,rev){
+  const grid=Array.from({length:n},()=>Array(n).fill(""));
+  const pick=pool($("lvl").value,n).slice(0,count).map(w=>({...w,hid:mode==="en"?w.en:w.ua,clue:mode==="en"?w.ua:w.en})).sort((a,b)=>b.hid.length-a.hid.length);
+  const out=[];
+  for(const w of pick){
+    const L=w.hid.length;
+    for(let a=0;a<250;a++){
+      let [dr,dc]=DIRS[Math.random()*4|0];
+      if(rev&&Math.random()<.4){dr=-dr;dc=-dc}
+      const r=Math.random()*n|0,c=Math.random()*n|0,er=r+dr*(L-1),ec=c+dc*(L-1);
+      if(er<0||er>=n||ec<0||ec>=n)continue;
+      let fit=true;
+      for(let i=0;i<L;i++){const ch=grid[r+dr*i][c+dc*i];if(ch&&ch!==w.hid[i]){fit=false;break}}
+      if(!fit)continue;
+      for(let i=0;i<L;i++)grid[r+dr*i][c+dc*i]=w.hid[i];
+      out.push({...w,r,c,dr,dc});break;
+    }
+  }
+  const abc=mode==="en"?EN:UA;
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(!grid[r][c])grid[r][c]=abc[Math.random()*abc.length|0];
+  return{grid,out};
+}
+function newGame(){
+  N=+$("size").value;
+  const x=gen(N,+$("num").value,$("mode").value,$("rev").checked);
+  g=x.grid;words=x.out.sort(()=>Math.random()-.5);found=new Set();
+  words.forEach((w,i)=>w.h=(i*47+170)%360);
+  const gr=$("grid");
+  gr.style.gridTemplateColumns=`repeat(${N},var(--cs))`;
+  gr.style.setProperty("--cs",N<=12?`min(${(520/N)|0}px,calc((94vw - 40px)/${N}))`:"30px");
+  let html="";
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++)html+=`<div class="cell" data-r="${r}" data-c="${c}">${g[r][c]}</div>`;
+  gr.innerHTML=html;cells=[...gr.children];
+  $("words").innerHTML=words.map((w,i)=>`<div class="w" id="w${i}" style="cursor:pointer" title="Натисни, щоб почути"><span>${w.clue}</span><small>${w.hid.length} літер</small></div>`).join("");
+  words.forEach((w,i)=>$("w"+i).onclick=()=>say(w.en));
+  $("cnt").textContent="0/"+words.length;$("win").classList.remove("on");
+  clearInterval(tick);t0=Date.now();
+  tick=setInterval(()=>{const s=(Date.now()-t0)/1000|0;$("time").textContent=String(s/60|0).padStart(2,"0")+":"+String(s%60).padStart(2,"0")},500);
+}
+const cellAt=(r,c)=>cells[r*N+c];
+function lineTo(a,b){
+  const dr=b.r-a.r,dc=b.c-a.c;
+  if(!(dr===0||dc===0||Math.abs(dr)===Math.abs(dc)))return[a];
+  const n=Math.max(Math.abs(dr),Math.abs(dc)),sr=Math.sign(dr),sc=Math.sign(dc),p=[];
+  for(let i=0;i<=n;i++)p.push({r:a.r+sr*i,c:a.c+sc*i});
+  return p;
+}
+function draw(){document.querySelectorAll(".cell.sel").forEach(c=>c.classList.remove("sel"));path.forEach(p=>cellAt(p.r,p.c).classList.add("sel"))}
+function posOf(e){
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  return el&&el.classList.contains("cell")?{r:+el.dataset.r,c:+el.dataset.c}:null;
+}
+const grid=$("grid");
+grid.addEventListener("pointerdown",e=>{if(scrollMode)return;const p=posOf(e);if(!p)return;start=p;path=[p];draw();clearHint()});
+grid.addEventListener("pointermove",e=>{if(!start)return;const p=posOf(e);if(!p)return;path=lineTo(start,p);draw()});
+window.addEventListener("pointerup",()=>{
+  if(!start)return;
+  const s=path.map(p=>g[p.r][p.c]).join(""),rs=[...s].reverse().join("");
+  const i=words.findIndex((w,k)=>!found.has(k)&&(w.hid===s||w.hid===rs));
+  if(i>=0&&path.length>1)mark(i);
+  start=null;path=[];draw();
+});
+function say(t){
+  if(!$("snd").checked||!window.speechSynthesis)return;
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.85;speechSynthesis.speak(u)}catch(e){}
+}
+function mark(i){
+  const w=words[i];found.add(i);
+  for(let k=0;k<w.hid.length;k++){const c=cellAt(w.r+w.dr*k,w.c+w.dc*k);c.classList.add("found");c.style.setProperty("--h",w.h)}
+  const el=$("w"+i);el.classList.add("done");el.style.setProperty("--h",w.h);
+  el.innerHTML=`<span>${w.en.toUpperCase()}</span><span>${w.ua}</span>`;
+  el.onclick=()=>say(w.en);
+  $("cnt").textContent=found.size+"/"+words.length;
+  say(w.en);
+  if(found.size===words.length){clearInterval(tick);setTimeout(()=>{$("winTxt").textContent="Усі слова знайдено за "+$("time").textContent;$("win").classList.add("on")},700)}
+}
+function clearHint(){if(hintCell){hintCell.classList.remove("hint");hintCell=null}}
+$("hintBtn").onclick=()=>{
+  clearHint();
+  const left=words.filter((w,i)=>!found.has(i));
+  if(!left.length)return;
+  const w=left[Math.random()*left.length|0];
+  hintCell=cellAt(w.r,w.c);hintCell.classList.add("hint");
+  hintCell.scrollIntoView({block:"center",inline:"center",behavior:"smooth"});
+};
+$("scrBtn").onclick=e=>{scrollMode=!scrollMode;e.target.classList.toggle("on",scrollMode);grid.classList.toggle("scr",scrollMode)};
+function sync(){$("sv").textContent=$("size").value+"×"+$("size").value;$("nv").textContent=$("num").value}
+$("size").oninput=()=>{$("num").value=suggest(+$("size").value);sync()};
+$("num").oninput=sync;
+$("size").onchange=newGame;$("num").onchange=newGame;
+["lvl","mode","rev"].forEach(id=>$(id).onchange=newGame);
+$("newBtn").onclick=newGame;$("again").onclick=newGame;
+newGame();
+</script>
+</body>
+</html>
